@@ -1,4 +1,4 @@
-"""djangoProject1 URL Configuration
+"""es URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/4.1/topics/http/urls/
@@ -23,7 +23,7 @@ from django.conf import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('main/', Main.as_view()), # main 페이지(자기소개/특장점)
+    path('main/', Sub.as_view()), # main 페이지(자기소개/특장점)
     # path('main/ajax_test', UploadData.as_view()), # main 페이지(포트폴리오) 보여준다
     path('main/ajax_test', UploadData.as_view()), # main 페이지(모델결과) 보여준다
 
@@ -44,5 +44,6 @@ urlpatterns = [
 
 
 ]
+print(settings.STATIC_URL)
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
