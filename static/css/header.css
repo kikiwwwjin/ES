@@ -1,0 +1,27 @@
+/* 헤더 전체 DIV CSS */
+.nav {
+    background-color : #17181E;
+    margin-top: 20px;
+    justify-content: flex-start;
+    padding: 20px;
+    border-top: 3px solid #5d5d5d;
+    border-bottom: 2px solid #5d5d5d;
+}
+
+/* 헤더 리스트 CSS */
+.nav-item {
+    /*background-color : #1f1f1f; !* 클릭 했을때 색상 *!*/
+    /*background-color : #2a2a2a; !* 클릭 했을때 색상 *!*/
+    background-color : #252525; /* 클릭 했을때 색상 */
+    margin-right: 20px;
+    border-radius: 10px;
+    padding: 8px;
+
+
+}
+/* 헤더 리스트 A 태그 CSS */
+.nav_item_a {
+    font-size: 20px;
+    color : white;
+    text-decoration: none;
+}

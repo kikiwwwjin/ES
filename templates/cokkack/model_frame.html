@@ -1,0 +1,136 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+
+</html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bootstrap demo</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    {# 헤더 부분 css stylesheet 가져오기#}
+    <link rel="stylesheet" href="{% static 'css/header.css' %}">
+    <link rel="stylesheet" href="{% static 'css/body.css' %}">
+    <link rel="stylesheet" href="{% static 'css/content.css' %}">
+    <link rel="stylesheet" href="{% static 'css/footer.css' %}">
+</head>
+
+{# 모델 클릭시 모델별 상세페이지로 이동 #}
+<script type="text/javascript">
+    function ti_op_submit(){
+        var title = document.querySelector('input[name="title"]');
+        var option_name = document.querySelector('input[name="option_name"]');
+        console.log(title.value + option_name.value);
+
+        var csrftoken = "{{ csrf_token }}";
+        console.log(csrftoken);
+
+        $.ajax({
+                type:'POST',
+                url: 'ajax_test', // 데이터를 보낼 곳 url
+                data: {
+                    'title' : title.value,
+                    'option_name':option_name.value,
+                    'csrfmiddlewaretoken': csrftoken,
+                },
+                datatype: 'json', // JSON 형식
+                success: function(data){
+                    console.log('성공했따!!!!',data);
+
+                    {#var model_result = data;#}
+                    var manufacturer = data.manufacturer;
+                    var brand = data.brand;
+                    var model_name = data.model_name;
+                    // 해당 ID의 HTML에 표현
+                    // html 값 초기화
+                    $('#model_result').html('');
+
+                    // append 함수는 계속해서 결과물이 쌓임
+                    $('#model_result').append('제조사 : ', manufacturer, '<br>');
+                    $('#model_result').append('브랜드 : ',brand, '<br>');
+                    $('#model_result').append('모델명 : ',model_name, '<br>');
+
+
+                },
+                error: function(xhr,errmsg,err){
+                    console.log('실패했따!!!!');
+                }
+        });
+
+    }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+{# header.html 부분 include #}
+{% include "cokkack/header.html" %}
+
+<body class="body_main">
+{# Overriding 요소 세팅 #}
+    {%  block content %}
+    {%  endblock %}
+
+
+
+
+    <div style="display: flex; flex-direction: row; text-align: center; justify-content: center; margin-top: 60px;">
+    <div style="width: 1000px; height: 1000px; background: yellowgreen; margin-right: 250px">
+        <div>
+            <table border="1">
+                <th>구분</th>
+                <th>내용</th>
+                <tr><!-- 첫번째 줄 시작 -->
+                    <td>개요</td>
+                    <td>SK MAGIC(가전제품) 상품 분류 모델 설계 및 개발</td>
+                </tr><!-- 첫번째 줄 끝 -->
+                <tr><!-- 두번째 줄 시작 -->
+                    <td>프로젝트 기간</td>
+                    <td>2022/05 ~ 2022/08</td>
+                </tr><!-- 두번째 줄 끝 -->
+            </table>
+
+
+
+            <h4> 프로젝트 설명 </h4>
+            개요 : SK MAGIC(가전제품) 상품 분류 모델 설계 및 개발
+            프로젝트 기간 : 2022/05 ~ 2022/08
+            사용 언어 및 패키지
+            - 언어 : Python(PyCharm) / 패키지 : Pytorch, transformers(KoBERT)
+            - 데이터베이스 : Mysql(Workbench)
+            담당 및 역할
+            - 데이터 전처리 및 가공
+            - 분류 모델 개발
+            - 배치 작업 모니터링 로직 개발
+            - 결과 데이터 분석 및 리포팅(정확도 검증)
+        </div>
+
+
+
+        <div>
+            <span> 모델 정보 : 상품 분류 모델 </span> <br>
+            <span> 모델 컨셉 : 유사도를 활용한 분류 모델 </span> <br>
+            <span> 카테고리 정보 : 인덕션, 가스레인지, 정수기, 비데, 오븐, 식기세척기, 전자레인지 등 </span> <br>
+            <span> 주요 패키지 : Transformers / BERT TOKENIZER(KoBERT) / Multiprocessing </span> <br>
+        </div>
+
+     버튼 '모델 사용해보기' => page 링크
+
+        <div>
+            모델 사용해보기
+        </div>
+
+    </div>
+    </div>
+</body>
+{# footer.html 부분 include #}
+{% include "cokkack/footer.html" %}

@@ -1,0 +1,9 @@
+.footer {
+    background-color : #27272A;
+    border-radius: 10px;
+    margin: 2rem;
+    padding: 2rem;
+    display: flex;
+    justify-content: space-evenly;
+    color: aliceblue;
+}

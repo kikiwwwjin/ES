@@ -1,0 +1,14 @@
+{% extends 'cokkack/main_frame.html' %}
+
+{# block 부분 Overriding #}
+{% block content %}
+    {# 재정의 내용 : 2개 div 태그를 추가함 #}
+    <div class="block_content"></div>
+    <div class="block_content"></div>
+
+
+    {% include "cokkack/models_simple.html" %}
+{#    <div style="background-color : #2a2a2a; padding: 2rem; margin: 2rem;"></div>#}
+{% endblock %}
+
+

@@ -1,0 +1,29 @@
+.block_content {
+    background-color : #2a2a2a;
+    border-radius: 10px;
+    height: 10rem;
+    margin: 2rem;
+    padding: 2rem;
+    color: white;
+    cursor: pointer;
+}
+.block_content:hover {
+    background-color : rgb(209 213 219);
+    border-radius: 10px;
+    height: 10rem;
+    margin: 2rem;
+    padding: 2rem;
+    color: white;
+}
+
+
+
+.block_model_content {
+    background-color : #2a2a2a;
+    border-radius: 10px;
+    /*height: 10rem;*/
+    margin: 2rem;
+    padding: 2rem;
+    color: white;
+    word-break: break-all;
+}
