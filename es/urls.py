@@ -16,7 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from .views import Sub, Sk_magic
-from content.views import Main, UploadData
+from content.views import Main, UploadData, Upload_item_master, Dupcheck_item_master, Filecheck_item_master
 # CSS 관련 패키지 임포트
 from django.conf.urls.static import static
 from django.conf import settings
@@ -27,6 +27,7 @@ urlpatterns = [
     # path('main/ajax_test', UploadData.as_view()), # main 페이지(포트폴리오) 보여준다
     path('main/ajax_test', UploadData.as_view()), # main 페이지(모델결과) 보여준다
 
+
     # 포트폴리오 메인 페이지
     # path('portfolio/', Sub.as_view()), # portfolio(포트폴리오)
     # 모델 메인 페이지
@@ -36,11 +37,16 @@ urlpatterns = [
     # path('portfolio/sk_magic/', Sk_magic.as_view()), # SK MAGIC 모델(상세페이지)
     # 모델별 상세페이지
     path('model_main/sk_magic/', Sk_magic.as_view()), # SK MAGIC 모델(상세페이지)
+    path('model_main/sk_magic/item_master_filecheck', Filecheck_item_master.as_view()), # 아이템 마스터 파일 정보 확인
+    path('model_main/sk_magic/item_master_dupcheck', Dupcheck_item_master.as_view()), # 아이템 마스터 중복체크
+    path('model_main/sk_magic/item_master_upload', Upload_item_master.as_view()), # 아이템 마스터 업로드
 
     # 모델별 정제 결과
     # path('portfolio/sk_magic/ajax_test', UploadData.as_view()), # SK MAGIC 정제 결과(상세페이지)
     # 모델별 정제 결과
     path('model_main/sk_magic/ajax_test', UploadData.as_view()), # SK MAGIC 정제 결과(상세페이지)
+    # 모델별 아이템 마스터 등록하기
+    path('model_main/sk_magic/add_item', UploadData.as_view()), # 아이템 마스터 등록하기
 
 
 ]

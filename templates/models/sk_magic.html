@@ -16,26 +16,22 @@
         &nbsp;&nbsp; - 배치 작업 모니터링 로직 개발 <br>
         &nbsp;&nbsp; - 결과 데이터 분석 및 리포팅(정확도 검증) <br>
     </div>
-    <div class="block_model_content"> 여기 담당 역할 및 사용 툴 </div>
+    <div class="block_model_content">
+        아이템 마스터 업로드 <br>
+        <button class="button" onclick="open_modal_add_item()" type="button"> UPLOAD </button>
+    </div>
     <div class="block_model_content"> 여기 타이틀 옵션명
         <form method="POST" action="/portfolio/sk_magic">
             {% csrf_token %}
             타이틀 : <input type="text", name="title"/>
             옵션명 : <input type="text", name="option_name"/>
-            <button class="ajax_test" onclick="ti_op_submit()" type="button"> Compute </button>
+            <button class="button" onclick="ti_op_submit()" type="button"> COMPUTE </button>
         </form>
         결과값 :
             <div id="model_result">
-{#            <div>#}
-{#                <span><c:out value="${model_result.manufacturer}"/></span>#}
+                <span><c:out value="${model_result.manufacturer}"/></span>
                 <span><c:out value="${model_result}"/></span>
-{#            <span><c:out value="${model_result_b}"/></span>#}
-{#            <span><c:out value="${model_result_md}"/></span>#}
+                <span><c:out value="${model_result_b}"/></span>
             </div>
-
-
     </div>
-
-{#    <div style="background-color : #2a2a2a; padding: 2rem; margin: 2rem;"></div>#}
-{% endblock %}
-
+{%  endblock %}

@@ -3,3 +3,44 @@
     padding: 2rem;
     margin: 2rem;
 }
+
+
+/* 버튼 CSS*/
+.button {
+    background-color: #a6a6a9;
+    font-weight: 400;
+    font-size: 1rem;
+    color: aliceblue;
+    /*padding: 2rem;*/
+    /*margin: 2rem;*/
+    border-radius: 10px;
+}
+
+/* MODAL 창 CSS */
+.modal_overlay {
+    width: 100%;
+    height: 100%;
+    left: 0;
+    right: 0;
+    position: absolute;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(1.5px);
+    -webkit-backdrop-filter: blur(1.5px);
+    color: white;
+}
+
+.modal_window {
+    background: rgb(37, 37, 37);
+    backdrop-filter: blur(13.5px);
+    -webkit-backdrop-filter: blur(13.5px);
+    border-radius: 10px;
+    border: 1px solid rgba(51, 49, 49, 0.18);
+    width: 900px;
+    height: 700px;
+    position: relative;
+    padding: 10px;
+}

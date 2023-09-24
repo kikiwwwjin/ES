@@ -5,6 +5,9 @@ from rest_framework.response import Response
 from .models import Model_result
 import simplejson as json
 import os
+import openpyxl
+import pandas as pd
+import numpy as np
 # Create your views here.
 
 
@@ -113,3 +116,165 @@ class UploadData(APIView):
 #
 
 
+class Upload_item_master(APIView):
+    def get(self, request):
+        print('Item_master_upload get으로 호출')
+        return render(request, 'models/sk_magic.html')
+
+    def post(self, request):
+        print('Item_master_upload post로 호출')
+        excel_file_object = request.FILES['files']
+        # excel_file_object = request.POST.get['item_master']
+        print(f'엑셀 파일 객체 : {excel_file_object}')
+
+        # AJAX로 가져온 엑셀 파일 객체 python에서 읽어 들이기
+        excel = openpyxl.load_workbook(excel_file_object, data_only=True)
+        # excel =openpyxl.load_workbook(excel_file_object)
+        work_sheet = excel.worksheets[0] # 첫번째 시트 가져오기
+        print(f'엑셀 파일 첫번째 시트 : {work_sheet}')
+
+        # 엑셀 시트의 데이터 가져오기
+        all_values = list()
+        columns_list = list()
+        for i, row in enumerate(work_sheet.rows):
+            row_value = []
+            for cell in row:
+                if i == 0:
+                    columns_list.append(cell.value)
+                else:
+                    # print(f'row 정보 : {row} || cel 정보 : {cell.value}')
+                    row_value.append(cell.value)
+            # 행 기준 value 값 APPEND
+            if row_value != []:
+                all_values.append(row_value)
+
+        # DataFrame으로 변환
+        df = pd.DataFrame(data=all_values, columns=columns_list)
+        print(df)
+
+
+
+
+
+        # fs = FileSystemStorage()
+        # print('엑셀 파일 객체 :', excel_file)
+        #
+        #
+        # # filename = fs.save('/data/file_upload/test.xlsx', file)
+        # filename = fs.save('C:/Users/Admin/Documents/GitHub/ES/test.xlsx', file)
+        # print(f'filename : {filename}')
+        # print(f'{file} 적재가 완료되었습니다!!')
+
+
+        # 아이템 마스터 객체 처리
+
+
+        # 결과 변수 리턴
+        # result = '아이템 마스터 객체'
+        response = {'status':1, 'message':'정상적으로 작동'}
+        # return HttpResponse(json.dumps(response), content_type='application/json')
+        return JsonResponse(response)
+
+
+
+class Dupcheck_item_master(APIView):
+    def get(self, request):
+        print('Item_master_upload get으로 호출')
+        return render(request, 'models/sk_magic.html')
+
+    def post(self, request):
+        print('Item_master_upload post로 호출')
+        excel_file_object = request.FILES['files']
+        # excel_file_object = request.POST.get['item_master']
+        print(f'엑셀 파일 객체 : {excel_file_object}')
+
+        # AJAX로 가져온 엑셀 파일 객체 python에서 읽어 들이기
+        excel = openpyxl.load_workbook(excel_file_object, data_only=True)
+        # excel =openpyxl.load_workbook(excel_file_object)
+        work_sheet = excel.worksheets[0] # 첫번째 시트 가져오기
+        print(f'엑셀 파일 첫번째 시트 : {work_sheet}')
+
+        # 엑셀 시트의 데이터 가져오기
+        all_values = list()
+        columns_list = list()
+        for i, row in enumerate(work_sheet.rows):
+            row_value = []
+            for cell in row:
+                if i == 0:
+                    columns_list.append(cell.value)
+                else:
+                    # print(f'row 정보 : {row} || cel 정보 : {cell.value}')
+                    row_value.append(cell.value)
+            # 행 기준 value 값 APPEND
+            if row_value != []:
+                all_values.append(row_value)
+
+        # DataFrame으로 변환
+        df = pd.DataFrame(data=all_values, columns=columns_list)
+        print(df)
+
+
+
+
+
+        # fs = FileSystemStorage()
+        # print('엑셀 파일 객체 :', excel_file)
+        #
+        #
+        # # filename = fs.save('/data/file_upload/test.xlsx', file)
+        # filename = fs.save('C:/Users/Admin/Documents/GitHub/ES/test.xlsx', file)
+        # print(f'filename : {filename}')
+        # print(f'{file} 적재가 완료되었습니다!!')
+
+
+        # 아이템 마스터 객체 처리
+
+
+        # 결과 변수 리턴
+        # result = '아이템 마스터 객체'
+        response = {'status':1, 'message':'정상적으로 작동'}
+        # return HttpResponse(json.dumps(response), content_type='application/json')
+        return JsonResponse(response)
+
+
+class Filecheck_item_master(APIView):
+    def get(self, request):
+        print('Item_master_upload get으로 호출')
+        return render(request, 'models/sk_magic.html')
+
+    def post(self, request):
+        print('Item_master_upload post로 호출')
+        excel_file_object = request.FILES['files']
+        # excel_file_object = request.POST.get['item_master']
+        print(f'엑셀 파일 객체 : {excel_file_object}')
+
+        # AJAX로 가져온 엑셀 파일 객체 python에서 읽어 들이기
+        excel = openpyxl.load_workbook(excel_file_object, data_only=True)
+        # excel =openpyxl.load_workbook(excel_file_object)
+        work_sheet = excel.worksheets[0] # 첫번째 시트 가져오기
+        print(f'엑셀 파일 첫번째 시트 : {work_sheet}')
+
+        # 엑셀 시트의 데이터 가져오기
+        all_values = list()
+        columns_list = list()
+        for i, row in enumerate(work_sheet.rows):
+            row_value = []
+            for cell in row:
+                if i == 0:
+                    columns_list.append(cell.value)
+                else:
+                    # print(f'row 정보 : {row} || cel 정보 : {cell.value}')
+                    row_value.append(cell.value)
+            # 행 기준 value 값 APPEND
+            if row_value != []:
+                all_values.append(row_value)
+
+        # DataFrame으로 변환
+        df = pd.DataFrame(data=all_values, columns=columns_list)
+        print(df)
+
+        # 컬럼 정보 Dictionary에 담기
+        data_info_dict = {'column_list' : columns_list}
+
+
+        return JsonResponse(data_info_dict)

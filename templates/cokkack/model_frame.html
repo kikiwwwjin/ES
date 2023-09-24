@@ -1,5 +1,4 @@
 {% load static %}
-<!doctype html>
 <html lang="en">
 
 </html>
@@ -39,7 +38,6 @@
                 success: function(data){
                     console.log('성공했따!!!!',data);
 
-                    {#var model_result = data;#}
                     var manufacturer = data.manufacturer;
                     var brand = data.brand;
                     var model_name = data.model_name;
@@ -60,77 +58,335 @@
         });
 
     }
+
+
+    function open_modal_add_item(){
+        // alert('아이템 마스터 업로드 버튼을 눌렀습니다.');
+        $('.modal_overlay').css({
+            display: "flex"
+        });
+        // 페이지 전체의 스크롤바 없애기
+        // $(document.body).css({
+        //     overflowY:"hidden"
+        // });
+
+    }
+
+    // 모달 닫기 코드
+    function close_modal(){
+        $('.modal_overlay').css({
+            display: "none"
+        });
+    // 페이지 전체의 스크롤바 없애기
+    //     $(document.body).css({
+    //         overflowY:"visible"
+    //     });
+    }
+
+
+    // 아이템 마스터 관련 GLOBAL 변수 선언
+    var item_master = '';
+    var item_master_columns = '';
+    var col_select = '';
+
+    // 아이템 마스터 파일 정보 읽어 들이기
+    $(function (){
+        $('#item_master_filecheck').on('click', function(e) {
+            // upload_item_master에 들어옴 !!
+            console.log('item_master_filecheck 에 들어옴!!');
+            console.log('EVENT 결과 :', e);
+            // reload(새로고침) 방지!!!!★
+            e.preventDefault();
+
+            // 1. 아이템 마스터 파일 객체 가져오기
+            item_master = document.querySelector("#item_master").files[0];
+            console.log('item_master 변수 :', item_master);
+
+            if (item_master === undefined) {
+                alert('아이템 마스터를 선택하세요~!!')
+                console.log('item_master 변수 : ', item_master);
+                console.log('item_master_columns 변수 :', item_master_columns);
+                document.getElementById('item_master_value').innerHTML = '선택안함';
+                return
+            } else {
+                console.log('아이템 마스터를 선택했습니다.');
+                console.log('선택된 파일명 :', item_master['name']);
+                document.getElementById('item_master_value').innerHTML = item_master['name'];
+            }
+            // FormData 선언
+            let frmdata = new FormData();
+
+            // FormData에 파일객체 append
+            frmdata.append('files', item_master);
+            frmdata.append('message', '메시지!!');
+            for (var pair of frmdata.entries()) {
+                console.log(pair[0]+ ', ' + pair[1]);
+            }
+
+            // {#let item_master = $("#item_master_form")[0];#}
+            console.log('frmdata 변수 :', frmdata);
+
+            // AJAX 토큰
+            var csrftoken = "{{ csrf_token }}";
+            console.log(csrftoken);
+
+            // AJAX
+            $.ajax({
+                type: 'POST',
+                enctype: 'multipart/form-data',
+                url: 'item_master_filecheck', // 데이터를 보낼 곳 url => urls에 반영 => View단에 의해 처리되어 Return
+                processData: false,
+                contentType: false,
+                cache: false,
+                data: frmdata,
+                //data: {
+                //{#    // 아이템 마스터 파일 전송#}
+                //{#    'item_master' : item_master,#}
+                //{#    'csrfmiddlewaretoken': csrftoken,#}
+                //{#datatype: 'json', // JSON 형식#}
+                success: function (data) {
+                    alert('성공했따!!!!');
+                    // 해당 id의 html 값 초기화
+                    $('#item_master_info').html('');
+                    // 컬럼 리스트 추가
+                    console.log(data.column_list);
+                    // 1. 부모 태그 변수 세팅
+                    let item_master_columns_parent = document.getElementById('item_master_columns');
+
+                    // 2. 자식 태그 속성 및 속성 값 부여
+                    for (let i=0; i < data.column_list.length; i++) {
+                        if (i===0) {
+                            let temp_span = document.createElement('span');
+                            temp_span.innerHTML = '중복 체크 기준 컬럼(필드)을 클릭하세요!! <br> 데이터 컬럼(필드) 정보 : ';
+                            item_master_columns_parent.append(temp_span);
+                        }
+
+                        let item_master_columns_child = document.createElement('input');
+                        item_master_columns_child.setAttribute('type', 'button')
+                        item_master_columns_child.setAttribute('class', 'col_button')
+                        item_master_columns_child.setAttribute('value', data.column_list[i])
+                        // 3. 부모 태그에 append해서 정보를 삽입
+                        item_master_columns_parent.append(item_master_columns_child);
+                    }
+
+
+
+
+
+
+                    // $('#item_master_info').append('브랜드 : ',brand, '<br>');
+                    // $('#item_master_info').append('모델명 : ',model_name, '<br>');
+
+                },
+                error: function (xhr, errmsg, err) {
+                    console.log('실패했따!!!!');
+                }
+            });
+        })
+    });
+
+
+    // 컬럼 정보중 클릭한 값 읽어 들이기
+    $(function (){
+        $('.col_button').on('click', function(e) {
+            // upload_item_master에 들어옴 !!
+            console.log('EVENT 결과 :', e);
+
+            // 1. 아이템 마스터 파일 객체 가져오기
+            col_select = document.getElementsByClassName("col_button");
+            console.log('클릭 컬럼 정보 :', col_select);
+
+            for (let i=0;i<col_select.length;i++) {
+                console.log('클릭 변수 정보 :', col_select[i]);
+            }
+
+
+
+
+            // AJAX 토큰
+            var csrftoken = "{{ csrf_token }}";
+            console.log(csrftoken);
+
+        })
+    });
+
+    // 아이템 마스터 중복 확인하기
+    $(function (){
+        $('#item_master_dupcheck').on('click', function(e) {
+            // upload_item_master에 들어옴 !!
+            console.log('item_master_dupcheck 에 들어옴!!');
+            console.log('EVENT 결과 :', e);
+            // reload(새로고침) 방지!!!!★
+            e.preventDefault();
+
+            // 1. 아이템 마스터 파일 객체 가져오기
+            item_master = document.querySelector("#item_master").files[0];
+            console.log('item_master:', item_master);
+
+            if (item_master === undefined) {
+                alert('아이템 마스터를 선택하세요~!!')
+                document.getElementById('item_master_value').innerHTML = '선택안함';
+                return
+            } else {
+                console.log('아이템 마스터를 선택했습니다.');
+                console.log('선택된 파일명 :', item_master['name']);
+                document.getElementById('item_master_value').innerHTML = item_master['name'];
+            }
+            // FormData 선언
+            let frmdata = new FormData();
+
+            // FormData에 파일객체 append
+            frmdata.append('files', item_master);
+            frmdata.append('message', '메시지!!');
+            for (var pair of frmdata.entries()) {
+                console.log(pair[0]+ ', ' + pair[1]);
+            }
+
+            // {#let item_master = $("#item_master_form")[0];#}
+            console.log('frmdata 변수 :', frmdata);
+
+            // AJAX 토큰
+            var csrftoken = "{{ csrf_token }}";
+            console.log(csrftoken);
+
+            // AJAX
+            $.ajax({
+                type: 'POST',
+                enctype: 'multipart/form-data',
+                url: 'item_master_dupcheck', // 데이터를 보낼 곳 url => urls에 반영 => View단에 의해 처리되어 Return
+                processData: false,
+                contentType: false,
+                cache: false,
+                data: frmdata,
+                //data: {
+                //{#    // 아이템 마스터 파일 전송#}
+                //{#    'item_master' : item_master,#}
+                //{#    'csrfmiddlewaretoken': csrftoken,#}
+                //{#datatype: 'json', // JSON 형식#}
+                success: function (data) {
+                    alert('성공했따!!!!', data.message);
+
+                },
+                error: function (xhr, errmsg, err) {
+                    console.log('실패했따!!!!');
+                }
+            });
+        })
+    });
+
+
+
+    // 아이템 마스터 업로드 하기
+    $(function (){
+        $('#item_master_upload').on('click', function(e) {
+            // upload_item_master에 들어옴 !!
+            console.log('item_master_upload 에 들어옴!!');
+            console.log('EVENT 결과 :', e);
+            // reload(새로고침) 방지!!!!★
+            e.preventDefault();
+
+            // 1. 아이템 마스터 파일 객체 가져오기
+            let item_master = $('#item_master'); // 파일 정보 가져오기
+            console.log("$('#item_master') :", item_master);
+            console.log("$('#item_master').files[0] :", item_master[0]);
+            item_master = document.querySelector("#item_master").files[0];
+            console.log('item_master 변수 :', item_master);
+            // FormData 선언
+            let frmdata = new FormData();
+            // FormData에 파일객체 append
+            frmdata.append('files', item_master);
+            frmdata.append('message', '메시지!!');
+            for (var pair of frmdata.entries()) {
+                console.log(pair[0]+ ', ' + pair[1]);
+            }
+
+            // {#let item_master = $("#item_master_form")[0];#}
+            console.log('frmdata 변수 :', frmdata);
+
+            // AJAX 토큰
+            var csrftoken = "{{ csrf_token }}";
+            console.log(csrftoken);
+
+            // AJAX
+            $.ajax({
+                type: 'POST',
+                enctype: 'multipart/form-data',
+                url: 'item_master_upload', // 데이터를 보낼 곳 url => urls에 반영 => View단에 의해 처리되어 Return
+                processData: false,
+                contentType: false,
+                cache: false,
+                data: frmdata,
+                //data: {
+                //{#    // 아이템 마스터 파일 전송#}
+                //{#    'item_master' : item_master,#}
+                //{#    'csrfmiddlewaretoken': csrftoken,#}
+                //{#datatype: 'json', // JSON 형식#}
+                success: function (data) {
+                    alert('성공했따!!!!', data.message);
+
+                },
+                error: function (xhr, errmsg, err) {
+                    console.log('실패했따!!!!');
+                }
+            });
+        })
+    });
+
+
+
+
 </script>
-
-
-
-
-
-
-
-
-
-
 
 {# header.html 부분 include #}
 {% include "cokkack/header.html" %}
 
 <body class="body_main">
+        <!--MODAL OVERLAY : 아이템 마스터 업로드 하기 위한 DIV-->
+    <div class="modal_overlay">
+        <div class="modal_window">
+            <form method="POST" id="item_master_form">
+                <input type="file" name="item_master" id="item_master">
+                <label id="item_master_value"></label>
+                <button type="submit" class="button"  id="item_master_filecheck"> 파일 정보 확인 </button>
+                <br> <span>아이템 마스터 컬럼 정보 </span>
+                <div id="item_master_info">
+                    <c:out value="${item_master_info}"/> 선택된 파일 없음
+                </div>
+
+
+                <button type="submit" class="button"  id="item_master_dupcheck" disabled='disabled'> 중복체크 </button>
+                <button type="submit" class="button"  id="item_master_upload" disabled='disabled'> 파일 UPLOAD </button>
+            </form>
+
+
+            <!-- 아이템 마스터 컬럼 DIV-->
+            <div id="item_master_columns"></div>
+
+
+
+
+
+
+
+
+
+            <button id="close_modal" class="button" onclick="close_modal()"> CLOSE </button>
+        </div>
+    </div>
+
+
+
+
 {# Overriding 요소 세팅 #}
     {%  block content %}
     {%  endblock %}
 
-
-
-
-    <div style="display: flex; flex-direction: row; text-align: center; justify-content: center; margin-top: 60px;">
-    <div style="width: 1000px; height: 1000px; background: yellowgreen; margin-right: 250px">
-        <div>
-            <table border="1">
-                <th>구분</th>
-                <th>내용</th>
-                <tr><!-- 첫번째 줄 시작 -->
-                    <td>개요</td>
-                    <td>SK MAGIC(가전제품) 상품 분류 모델 설계 및 개발</td>
-                </tr><!-- 첫번째 줄 끝 -->
-                <tr><!-- 두번째 줄 시작 -->
-                    <td>프로젝트 기간</td>
-                    <td>2022/05 ~ 2022/08</td>
-                </tr><!-- 두번째 줄 끝 -->
-            </table>
-
-
-
-            <h4> 프로젝트 설명 </h4>
-            개요 : SK MAGIC(가전제품) 상품 분류 모델 설계 및 개발
-            프로젝트 기간 : 2022/05 ~ 2022/08
-            사용 언어 및 패키지
-            - 언어 : Python(PyCharm) / 패키지 : Pytorch, transformers(KoBERT)
-            - 데이터베이스 : Mysql(Workbench)
-            담당 및 역할
-            - 데이터 전처리 및 가공
-            - 분류 모델 개발
-            - 배치 작업 모니터링 로직 개발
-            - 결과 데이터 분석 및 리포팅(정확도 검증)
-        </div>
-
-
-
-        <div>
-            <span> 모델 정보 : 상품 분류 모델 </span> <br>
-            <span> 모델 컨셉 : 유사도를 활용한 분류 모델 </span> <br>
-            <span> 카테고리 정보 : 인덕션, 가스레인지, 정수기, 비데, 오븐, 식기세척기, 전자레인지 등 </span> <br>
-            <span> 주요 패키지 : Transformers / BERT TOKENIZER(KoBERT) / Multiprocessing </span> <br>
-        </div>
-
-     버튼 '모델 사용해보기' => page 링크
-
-        <div>
-            모델 사용해보기
-        </div>
-
-    </div>
-    </div>
 </body>
+
+<script type="text/javascript">
+    document.getElementById('item_master_value').innerHTML = item_master; // 아이템 마스터 LABEL 태그에 객체 부여
+</script>
+
+
 {# footer.html 부분 include #}
 {% include "cokkack/footer.html" %}
