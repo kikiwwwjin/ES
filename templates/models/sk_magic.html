@@ -1,5 +1,6 @@
 {% extends 'cokkack/model_frame.html' %}
 
+
 {# block 부분 Overriding #}
 {% block content %}
     {# 재정의 내용 : 2개 div 태그를 추가함 #}
@@ -18,7 +19,8 @@
     </div>
     <div class="block_model_content">
         아이템 마스터 업로드 <br>
-        <button class="button" onclick="open_modal_add_item()" type="button"> UPLOAD </button>
+        <button class="button" id="item_upload_btn" onclick="open_modal_add_item()"> UPLOAD </button>
+        <h2>{{site}}</h2>
     </div>
     <div class="block_model_content"> 여기 타이틀 옵션명
         <form method="POST" action="/portfolio/sk_magic">

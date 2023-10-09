@@ -18,6 +18,11 @@
 
 {# 모델 클릭시 모델별 상세페이지로 이동 #}
 <script type="text/javascript">
+    // 아이템 마스터 관련 GLOBAL 변수 선언
+    var item_master = '';
+    var selected_item_master_columns = []; // 선택된 아이템 마스터 컬럼
+    var site = '{{site}}'; // 사이트(프로젝트) 정보
+    console.log('여기 override 모체 :', site);
     function ti_op_submit(){
         var title = document.querySelector('input[name="title"]');
         var option_name = document.querySelector('input[name="option_name"]');
@@ -65,29 +70,45 @@
         $('.modal_overlay').css({
             display: "flex"
         });
-        // 페이지 전체의 스크롤바 없애기
-        // $(document.body).css({
-        //     overflowY:"hidden"
-        // });
+
+        // 사이트(프로젝트) 정보 가져오기
+        console.log('사이트(프로젝트) 정보 :', site);
 
     }
 
     // 모달 닫기 코드
     function close_modal(){
+        // 모달 창 display 조정
         $('.modal_overlay').css({
             display: "none"
         });
-    // 페이지 전체의 스크롤바 없애기
-    //     $(document.body).css({
-    //         overflowY:"visible"
-    //     });
+
+        // 아이템 마스터 파일 및 컬럼 정보 초기화
+        item_master = '';
+        // 부모 Element
+        let item_master_columns_parent  = document.getElementById('item_master_columns');
+
+        // while문으로 자식 노드 모두 제거
+        while(item_master_columns_parent.firstChild) {
+            item_master_columns_parent.firstChild.remove();
+        }
+
+        // 컬럼 변수 초기화
+        item_master_columns = [];
+
+        // 중복 체크 & 파일 업로드 버튼 비활성화(비활성 css 입히기)
+        $('#item_master_dupcheck').attr('disabled', true);
+        $('#item_master_dupcheck').attr('class', 'button_disabled');
+        $('#item_master_upload').attr('disabled', true);
+        $('#item_master_upload').attr('class', 'button_disabled');
+
+        // 아이템 마스터 파일명 초기화
+        $('#item_master_value').html('');
+        //document.getElementById('item_master_value').innerHTML = '선택안함';
     }
 
 
-    // 아이템 마스터 관련 GLOBAL 변수 선언
-    var item_master = '';
-    var item_master_columns = '';
-    var col_select = '';
+
 
     // 아이템 마스터 파일 정보 읽어 들이기
     $(function (){
@@ -104,14 +125,13 @@
 
             if (item_master === undefined) {
                 alert('아이템 마스터를 선택하세요~!!')
-                console.log('item_master 변수 : ', item_master);
-                console.log('item_master_columns 변수 :', item_master_columns);
                 document.getElementById('item_master_value').innerHTML = '선택안함';
                 return
             } else {
-                console.log('아이템 마스터를 선택했습니다.');
-                console.log('선택된 파일명 :', item_master['name']);
                 document.getElementById('item_master_value').innerHTML = item_master['name'];
+                // 해당 div 태그에 대한 하위 태그 초기화
+                $('#item_master_columns').empty();
+
             }
             // FormData 선언
             let frmdata = new FormData();
@@ -162,20 +182,31 @@
                         }
 
                         let item_master_columns_child = document.createElement('input');
-                        item_master_columns_child.setAttribute('type', 'button')
-                        item_master_columns_child.setAttribute('class', 'col_button')
-                        item_master_columns_child.setAttribute('value', data.column_list[i])
+                        item_master_columns_child.setAttribute('type', 'button');
+                        item_master_columns_child.setAttribute('class', 'col_button');
+                        // item_master_columns_child.setAttribute('id', 'col_button_'+i.toString());
+                        item_master_columns_child.setAttribute('onclick', 'col_button_click(this)');
+
+                        item_master_columns_child.setAttribute('value', data.column_list[i]);
                         // 3. 부모 태그에 append해서 정보를 삽입
                         item_master_columns_parent.append(item_master_columns_child);
+
+                        // 4. 컬럼 ID 나열 텍스트 생성
+                        //if (i===(data.column_list.length-1)) {
+                        //    item_master_columns += 'col_button_'+i.toString() + ','
+                        //} else {
+                        //    item_master_columns += 'col_button_'+i.toString()
+                        //}
+
+
                     }
 
+                    // 파일 업로드 버튼 활성화
+                    $('#item_master_upload').attr('disabled', false);
+                    $('#item_master_upload').attr('class', 'col_button');
 
+                    //console.log(item_master_columns);
 
-
-
-
-                    // $('#item_master_info').append('브랜드 : ',brand, '<br>');
-                    // $('#item_master_info').append('모델명 : ',model_name, '<br>');
 
                 },
                 error: function (xhr, errmsg, err) {
@@ -187,30 +218,56 @@
 
 
     // 컬럼 정보중 클릭한 값 읽어 들이기
-    $(function (){
-        $('.col_button').on('click', function(e) {
-            // upload_item_master에 들어옴 !!
-            console.log('EVENT 결과 :', e);
-
-            // 1. 아이템 마스터 파일 객체 가져오기
-            col_select = document.getElementsByClassName("col_button");
-            console.log('클릭 컬럼 정보 :', col_select);
-
-            for (let i=0;i<col_select.length;i++) {
-                console.log('클릭 변수 정보 :', col_select[i]);
-            }
+    function col_button_click(obj) {
+        let clicked_column = $(obj).val();
+        console.log('선택한 컬럼명 :', clicked_column);
 
 
+        // 선택된 컬럼 리스트 확인
+        let find_columns = selected_item_master_columns.includes(clicked_column);
+        console.log('선택한 컬럼 존재여부 :', find_columns);
+        // 컬럼이 이미 클릭된지 확인
+        if (find_columns) {
+            // 컬럼 리스트에서 제거
+            selected_item_master_columns.pop(clicked_column);
+            // 클릭 효과 제거
+            $(obj).removeClass('col_button_clicked');
+
+        } else { // 컬럼이 선택되지 않았을 경우
+            // 컬럼 리스트에 추가
+            selected_item_master_columns.push(clicked_column);
+            // 클릭 효과
+            $(obj).addClass('col_button_clicked');
+        }
+
+        // 중복 체크 기준 컬럼 선택에 따른 중복체크 가능 여부
+        if (selected_item_master_columns.length >= 1) {
+            console.log('중복체크 활성화 상태');
+            // 활성화 버튼 상태로 전환
+            $('#item_master_dupcheck').attr('disabled', false);
+            // css 활성화
+            $('#item_master_dupcheck').attr('class', 'button');
+
+        } else {
+            console.log('중복체크 비활성화 상태');
+            // 비활성화 버튼 상태 전환
+            $('#item_master_dupcheck').attr('disabled', true);
+            // css 비활성화
+            $('#item_master_dupcheck').attr('class', 'button_disabled');
+
+        }
 
 
-            // AJAX 토큰
-            var csrftoken = "{{ csrf_token }}";
-            console.log(csrftoken);
 
-        })
-    });
 
-    // 아이템 마스터 중복 확인하기
+        console.log('clicked_column 리스트 :', selected_item_master_columns);
+    }
+
+
+
+
+
+    // 아이템 마스터 중복 체크
     $(function (){
         $('#item_master_dupcheck').on('click', function(e) {
             // upload_item_master에 들어옴 !!
@@ -220,23 +277,16 @@
             e.preventDefault();
 
             // 1. 아이템 마스터 파일 객체 가져오기
-            item_master = document.querySelector("#item_master").files[0];
-            console.log('item_master:', item_master);
+            console.log('item_master 객체 :', item_master);
+            console.log('selected_item_master_columns 객체 :', selected_item_master_columns);
 
-            if (item_master === undefined) {
-                alert('아이템 마스터를 선택하세요~!!')
-                document.getElementById('item_master_value').innerHTML = '선택안함';
-                return
-            } else {
-                console.log('아이템 마스터를 선택했습니다.');
-                console.log('선택된 파일명 :', item_master['name']);
-                document.getElementById('item_master_value').innerHTML = item_master['name'];
-            }
+
             // FormData 선언
             let frmdata = new FormData();
 
             // FormData에 파일객체 append
-            frmdata.append('files', item_master);
+            frmdata.append('item_master', item_master);
+            frmdata.append('selected_columns', selected_item_master_columns)
             frmdata.append('message', '메시지!!');
             for (var pair of frmdata.entries()) {
                 console.log(pair[0]+ ', ' + pair[1]);
@@ -253,6 +303,7 @@
             $.ajax({
                 type: 'POST',
                 enctype: 'multipart/form-data',
+                // datatype: 'json', // JSON 형식
                 url: 'item_master_dupcheck', // 데이터를 보낼 곳 url => urls에 반영 => View단에 의해 처리되어 Return
                 processData: false,
                 contentType: false,
@@ -262,13 +313,13 @@
                 //{#    // 아이템 마스터 파일 전송#}
                 //{#    'item_master' : item_master,#}
                 //{#    'csrfmiddlewaretoken': csrftoken,#}
-                //{#datatype: 'json', // JSON 형식#}
+
                 success: function (data) {
-                    alert('성공했따!!!!', data.message);
+                    console.log('중복제거 완료!!!!', data);
 
                 },
                 error: function (xhr, errmsg, err) {
-                    console.log('실패했따!!!!');
+                    console.log('중복제거 실패했따!!!!');
                 }
             });
         })
@@ -294,7 +345,8 @@
             // FormData 선언
             let frmdata = new FormData();
             // FormData에 파일객체 append
-            frmdata.append('files', item_master);
+            frmdata.append('files', item_master); // 파일정보 APPEND
+            frmdata.append('site', site); // 사이트(프로젝트) APPEND
             frmdata.append('message', '메시지!!');
             for (var pair of frmdata.entries()) {
                 console.log(pair[0]+ ', ' + pair[1]);
@@ -331,10 +383,6 @@
             });
         })
     });
-
-
-
-
 </script>
 
 {# header.html 부분 include #}
@@ -350,12 +398,11 @@
                 <button type="submit" class="button"  id="item_master_filecheck"> 파일 정보 확인 </button>
                 <br> <span>아이템 마스터 컬럼 정보 </span>
                 <div id="item_master_info">
-                    <c:out value="${item_master_info}"/> 선택된 파일 없음
+                    </c:out value="${item_master_info}"/> 선택된 파일 없음
                 </div>
 
 
-                <button type="submit" class="button"  id="item_master_dupcheck" disabled='disabled'> 중복체크 </button>
-                <button type="submit" class="button"  id="item_master_upload" disabled='disabled'> 파일 UPLOAD </button>
+
             </form>
 
 
@@ -363,7 +410,8 @@
             <div id="item_master_columns"></div>
 
 
-
+            <button type="submit" class="button_disabled" id="item_master_dupcheck" disabled=true> 선택된 컬럼으로 중복체크 </button>
+            <button type="submit" class="button_disabled" id="item_master_upload" disabled=true> 파일 UPLOAD </button>
 
 
 

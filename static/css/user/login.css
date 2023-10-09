@@ -1,0 +1,55 @@
+.body_main {
+    display: flex;
+    background-color: black;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem;
+    margin: 2rem;
+}
+
+/* 회원가입 창 */
+.join {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    background: rgb(52, 53, 59);
+    width: 400px;
+    height: 300px;
+    padding: 20px;
+    color: white;
+    border-radius: 10px;
+    border-color: rgb(57, 59, 65);
+}
+
+/* 회원가입 창 */
+.join_contents {
+    background: rgb(52, 53, 59);
+    border-radius: 10px;
+    color: rgb(52, 53, 59);
+}
+
+/* 로그인 질문 div */
+.login_question {
+    height: 50px;
+    color: cornflowerblue;
+    display: flex;
+    align-items: center;
+}
+
+/* 일반 버튼 CSS*/
+.button {
+    background: #2c2c33;
+    /*border-color: rgba(55, 56, 61, 55);*/
+    font-size: 1rem;
+    color: aliceblue;
+    margin-top: 20px;
+    /*padding: 2rem;*/
+    /*margin: 2rem;*/
+    border-color: rgb(86, 86, 94);
+    border-radius: 10px;
+}
+
+
+
+

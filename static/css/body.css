@@ -5,7 +5,7 @@
 }
 
 
-/* 버튼 CSS*/
+/* 일반 버튼 CSS*/
 .button {
     background-color: #a6a6a9;
     font-weight: 400;
@@ -15,6 +15,45 @@
     /*margin: 2rem;*/
     border-radius: 10px;
 }
+
+
+
+
+
+/* 아이템 마스터 컬럼(필드) 버튼 CSS*/
+.col_button {
+    background-color: #a6a6a9;
+    font-weight: 400;
+    font-size: 1rem;
+    color: aliceblue;
+    /*padding: 2rem;*/
+    /*margin: 2rem;*/
+    border-radius: 10px;
+}
+.col_button:hover {
+      background-color: #363636;
+      transition: 0.7s;
+}
+
+.col_button:active {
+      background-color: #363636;
+      transition: 0.7s;
+}
+/* 클릭 후 상태 유지 */
+.col_button_clicked {
+    background-color: #363636;
+}
+
+/* 버튼 비활성화 */
+.button_disabled {
+    background-color: #282828;
+    color: #444444;
+    font-weight: 400;
+}
+
+
+
+
 
 /* MODAL 창 CSS */
 .modal_overlay {
@@ -34,13 +73,13 @@
 }
 
 .modal_window {
-    background: rgb(37, 37, 37);
+    background: rgba(35, 36, 41, 36);
     backdrop-filter: blur(13.5px);
     -webkit-backdrop-filter: blur(13.5px);
     border-radius: 10px;
     border: 1px solid rgba(51, 49, 49, 0.18);
-    width: 900px;
-    height: 700px;
+    width: 1300px;
+    height: 1000px;
     position: relative;
     padding: 10px;
 }
